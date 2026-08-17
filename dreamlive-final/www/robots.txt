@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /uploads/
+Sitemap: https://dreamlive.onrender.com/sitemap.xml
