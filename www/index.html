@@ -89,7 +89,7 @@ async function installPWA(){if(state.deferredPrompt){state.deferredPrompt.prompt
 async function uploadVideo(){const file=document.getElementById('videoFile').files[0],token=document.getElementById('adminToken').value,st=document.getElementById('uploadStatus');if(!file){st.textContent='Select a video first.';return}const fd=new FormData();fd.append('video',file);st.textContent='Uploading…';try{const r=await fetch('/api/upload',{method:'POST',headers:{'x-admin-token':token},body:fd});const d=await r.json();if(!r.ok)throw new Error(d.error||'Upload failed');st.textContent='Upload successful.';document.getElementById('videoList').insertAdjacentHTML('beforeend',`<div class="card panel"><video controls style="width:100%;border-radius:12px"><source src="${esc(d.video)}"></video><div style="margin-top:8px">${esc(d.filename)}</div></div>`)}catch(e){st.textContent=e.message}}
 document.getElementById('search').addEventListener('input',applyFilters);
 state.selectedLeague=localStorage.getItem('dreamlive_selected_league')||'';buildPopular();buildLeagueStrip();loadAll(false);setInterval(()=>loadEndpoint('live','/api/live').then(renderAll),60_000);setInterval(()=>loadEndpoint('upcoming','/api/upcoming').then(renderAll),15*60_000);if('serviceWorker'in navigator)navigator.serviceWorker.register('/sw.js').catch(()=>{});
-document.querySelectorAll('.nav a').forEach(link => {
+document.querySelectorAll('.nav a[href^="#"]').forEach(link => {
     link.addEventListener('click', function(e) {
 
         const targetId = this.getAttribute('href');
@@ -107,6 +107,7 @@ document.querySelectorAll('.nav a').forEach(link => {
         e.preventDefault();
 
         const header = document.querySelector('.header');
+
         const headerHeight = header
             ? header.offsetHeight
             : 0;
@@ -124,4 +125,5 @@ document.querySelectorAll('.nav a').forEach(link => {
     });
 });
 </script>
-</body></html>
+</body>
+</html>
