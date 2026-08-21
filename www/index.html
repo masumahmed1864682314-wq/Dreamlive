@@ -90,24 +90,42 @@ async function uploadVideo(){const file=document.getElementById('videoFile').fil
 document.getElementById('search').addEventListener('input',applyFilters);
 state.selectedLeague=localStorage.getItem('dreamlive_selected_league')||'';buildPopular();buildLeagueStrip();loadAll(false);setInterval(()=>loadEndpoint('live','/api/live').then(renderAll),60_000);setInterval(()=>loadEndpoint('upcoming','/api/upcoming').then(renderAll),15*60_000);if('serviceWorker'in navigator)navigator.serviceWorker.register('/sw.js').catch(()=>{});
 document.querySelectorAll('.nav a[href^="#"]').forEach(link => {
-    link.addEventListener('click', function(e) {
+
+    link.onclick = function(e) {
+
         e.preventDefault();
+        e.stopPropagation();
 
         const targetId = this.getAttribute('href');
         const target = document.querySelector(targetId);
 
-        if (!target) return;
+        if (!target) return false;
 
         const header = document.querySelector('.header');
-        const offset = header ? header.offsetHeight : 0;
+        const offset = header
+            ? header.offsetHeight + 10
+            : 10;
+
+        const position =
+            target.getBoundingClientRect().top +
+            window.scrollY -
+            offset;
 
         window.scrollTo({
-            top: target.offsetTop - offset,
+            top: position,
             behavior: 'smooth'
         });
 
-        history.replaceState(null, '', window.location.pathname);
-    });
+        // URL থেকে #live/#today/#upcoming সরিয়ে দেবে
+        history.replaceState(
+            null,
+            '',
+            window.location.pathname
+        );
+
+        return false;
+    };
+
 });
 </script>
 </body>
